@@ -1,0 +1,3 @@
+#!/bin/sh
+export STARSHIP_CONFIG="$HOME/.local/share/rice-profiles/arc-steel/starship.toml"
+exec /usr/bin/kitty --config "$HOME/.local/share/rice-profiles/arc-steel/kitty.conf" "$@"

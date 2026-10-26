@@ -1,0 +1,11 @@
+* { background-color: transparent; text-color: {{palette.text}}; font: {{fonts.main_pango}}; }
+window { width: 560px; border: 1px; border-color: {{palette.highest}}99; border-radius: 22px; padding: 16px; background-color: {{palette.background}}; }
+mainbox { children: [ inputbar, message, listview ]; spacing: 12px; }
+inputbar { children: [ icon-search, prompt, entry ]; spacing: 10px; padding: 5px; border: 1px; border-color: {{palette.highest}}; border-radius: 28px; background-color: {{palette.low}}; }
+icon-search { filename: "system-search-symbolic"; size: 22px; padding: 7px; border-radius: 24px; background-color: {{palette.highest}}; expand: false; vertical-align: 0.5; }
+prompt, entry { vertical-align: 0.5; }
+entry { padding: 0px 10px 0px 0px; }
+listview { lines: 5; spacing: 6px; }
+element { padding: 10px; border-radius: 10px; }
+element selected.normal { background-color: {{palette.selection}}; }
+element-text, prompt, entry, textbox { background-color: transparent; }

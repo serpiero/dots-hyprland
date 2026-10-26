@@ -1,17 +1,59 @@
-/diagnose.result
-/cache
-
-# Ignore Python cache files
 __pycache__/
-*.py[cod]
+*.pyc
+*.log
+*.pid
+.git-credentials
+ui/cache/
+ui/state/*
+!ui/state/user/
+ui/state/user/*
+!ui/state/user/generated/
+ui/state/user/generated/*
+!ui/state/user/generated/colors.json
+arc-steel/application-style/config/
+arc-steel/application-style/clients/
+arc-steel/application-style/desktop-backups/
+arc-steel/application-style/spicetify/Backup/
+arc-steel/application-style/spicetify/config-xpui.ini
+arc-steel/application-style/*.so
+arc-steel/application-style/qbittorrent/*.so
+arc-steel/application-style/retroarch/
+backups/
+INSTALLATION.json
+original-hyprland.lua
+active
+wallpaper-path
+local.lua
+web-runtime/bin/qs
+/bin/
 
-/dots/.config/quickshell/ii/.qmlls.ini
+ui/assets/fonts/*.ttf
 
-# exp-update
-/.update-lock
+firefox-profile-path
+/firefox/
 
-# custom os-release
-/os-release
+local-theme.json
+theme-selection.json
+features/phone-display/config.local.json
 
-# Emacs auto backup file
-*~
+ui/generated/WorkspaceIconSources.js
+
+# Firefox user data is local; export only CSS and visual templates.
+/firefox-profile/
+/.mozilla/
+/mozilla/
+**/profiles.ini
+**/installs.ini
+*.sqlite*
+*.db-wal
+*.db-shm
+cookies.txt
+sessionstore.json*
+sessionstore.js
+sessionstore-backups/
+recovery.jsonlz4
+previous.jsonlz4
+upgrade.jsonlz4-*
+logins.json
+key4.db
+cert9.db

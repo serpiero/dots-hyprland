@@ -1,0 +1,57 @@
+/* Arc Steel Discord: interface colors only, no plugins or account changes. */
+:root, .theme-dark, .theme-midnight {
+ --background-primary: var(--steel-background) !important;
+ --background-secondary: var(--steel-background) !important;
+ --background-secondary-alt: var(--steel-background) !important;
+ --background-tertiary: var(--steel-background) !important;
+ --background-floating: var(--steel-background) !important;
+ --background-base-lowest: var(--steel-background) !important;
+ --background-base-lower: var(--steel-background) !important;
+ --background-base-low: var(--steel-background) !important;
+ --background-surface-high: var(--steel-background) !important;
+ --background-surface-higher: var(--steel-background) !important;
+ --background-surface-highest: var(--steel-background) !important;
+ --background-modifier-hover: var(--steel-high) !important;
+ --background-modifier-selected: var(--steel-selection) !important;
+ --channeltextarea-background: var(--steel-low) !important;
+ --text-normal: var(--steel-text) !important;
+ --text-muted: var(--steel-muted) !important;
+ --header-primary: var(--steel-text) !important;
+ --channels-default: var(--steel-muted) !important;
+ --interactive-active: var(--steel-text) !important;
+}
+html, body, #app-mount { background-color: var(--steel-background) !important; }
+
+/* Opaque Discord overlays; colors come from the shared Steel palette. */
+:root, .theme-dark, .theme-midnight {
+ --background-nested-floating: var(--steel-background) !important;
+ --modal-background: var(--steel-background) !important;
+ --modal-footer-background: var(--steel-low) !important;
+}
+[class*="standardSidebarView_"] {
+ background: var(--steel-background) !important;
+ opacity: 1 !important;
+ isolation: isolate;
+}
+[class*="standardSidebarView_"] :is(
+ [class*="sidebarRegion_"],
+ [class*="sidebarRegionScroller_"],
+ [class*="contentRegion_"],
+ [class*="contentRegionScroller_"]
+) {
+ background: var(--steel-background) !important;
+ opacity: 1 !important;
+}
+[role="dialog"],
+[role="menu"],
+[class^="popout_"],
+[class*=" popout_"],
+[class*="userProfileOuter_"] {
+ background: var(--steel-background) !important;
+ opacity: 1 !important;
+}
+[class*="userProfileInner_"],
+[role="dialog"] [class*="footer_"] {
+ background: var(--steel-low) !important;
+ opacity: 1 !important;
+}

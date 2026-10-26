@@ -1,0 +1,130 @@
+/* Arc Steel: color surfaces only. Hyprland supplies the window blur. */
+:root {
+  --toolbar-bgcolor: var(--steel-background) !important;
+  --toolbar-background-color: var(--steel-background) !important;
+  --toolbox-background-color: var(--steel-background) !important;
+  --toolbox-background-color-inactive: var(--steel-background) !important;
+  --sidebar-launcher-surface-color: var(--steel-background) !important;
+  --tabpanel-background-color: var(--steel-background) !important;
+  --lwt-accent-color: var(--steel-background) !important;
+  --lwt-frame: var(--steel-background) !important;
+  --sidebar-background-color: var(--steel-background) !important;
+}
+#navigator-toolbox, #nav-bar, #TabsToolbar, #PersonalToolbar,
+sidebar-main, #sidebar-main, #sidebar-box, #sidebar-header,
+#vertical-tabs, #tabbrowser-tabs, .sidebar-panel, #browser {
+  background-color: var(--steel-background) !important;
+  background-image: none !important;
+}
+#navigator-toolbox, #sidebar-main, #sidebar-box {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+/* Keep the existing controls, typography and tab geometry. */
+
+/* One continuous steel surface; compositor blur is shared with the system. */
+:root {
+  --toolbar-field-background-color: var(--steel-background) !important;
+  --toolbar-field-background-color-focus: var(--steel-background) !important;
+  --urlbar-background-color: var(--steel-background) !important;
+  --urlbar-background-color-focus: var(--steel-background) !important;
+  --chrome-content-separator-color: transparent !important;
+  --sidebar-border-color: transparent !important;
+  --tabs-navbar-separator-color: transparent !important;
+  --content-area-shadow: none !important;
+}
+#urlbar:not([open]), #urlbar:not([open]) #urlbar-background,
+#urlbar:not([open]) .urlbar-background,
+#urlbar:not([open]) .urlbar-input-container, #searchbar {
+  background-color: var(--steel-background) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+#urlbar:not([open]):not([focused]) #urlbar-background,
+#urlbar:not([open]):not([focused]) .urlbar-background,
+#urlbar:not([open]):not([focused]) .urlbar-input-container {
+  border-color: transparent !important;
+}
+#tabbrowser-tabpanels > :not(.split-view-panel) .browserContainer,
+#tabbrowser-tabbox, #sidebar-box, #sidebar-header,
+sidebar-main, #navigator-toolbox, #nav-bar {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+#tabbrowser-tabpanels > :not(.split-view-panel) .browserContainer {
+  outline: none !important;
+}
+#sidebar-splitter, #sidebar-launcher-splitter {
+  border-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Small high-density displays: larger browser controls while retaining the desktop scale. */
+@media (max-device-width: {{layout.phone.maxDeviceWidth}}px) and (min-resolution: {{layout.phone.minDppx}}dppx) {
+  :root, #navigator-toolbox, #nav-bar, #urlbar-container { min-width: 0 !important; }
+  #navigator-toolbox, #sidebar-main, #sidebar-box { zoom: {{layout.phone.chromeZoom}}; }
+}
+
+/* Context menus: keep the compact inner surface, without an outer frame/shadow. */
+menupopup {
+  --panel-background: var(--steel-high) !important;
+  --panel-color: var(--steel-text) !important;
+  --panel-border-color: transparent !important;
+  --panel-shadow: none !important;
+  --panel-border-radius: 8px !important;
+  --panel-padding: 4px !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+menupopup::part(content), menupopup > .menupopup-arrowscrollbox {
+  background: var(--steel-high) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 8px !important;
+  margin: 0 !important;
+}
+menupopup menuitem, menupopup menu {
+  border: 0 !important;
+  border-radius: 4px !important;
+  margin-inline: 4px !important;
+}
+menupopup :is(menuitem, menu)[_moz-menuactive="true"]:not([disabled="true"]) {
+  background-color: var(--steel-selection) !important;
+  background-image: none !important;
+  color: var(--steel-text) !important;
+  box-shadow: none !important;
+}
+
+/* Firefox application menu and extension/settings panels also own their surface. */
+:root {
+  --arrowpanel-background: var(--steel-high) !important;
+  --arrowpanel-color: var(--steel-text) !important;
+  --arrowpanel-border-color: transparent !important;
+}
+panel {
+  --panel-background: var(--steel-high) !important;
+  --panel-color: var(--steel-text) !important;
+  --panel-border-color: transparent !important;
+  --panel-shadow: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+panel::part(content), .panel-arrowcontent, .panel-viewcontainer, panelview {
+  background-color: var(--steel-high) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* All Firefox popup and inactive surface roles use the same palette. */
+:root {
+  --arrowpanel-background: var(--steel-background) !important;
+  --arrowpanel-color: var(--steel-text) !important;
+  --arrowpanel-border-color: var(--steel-selection) !important;
+  --lwt-text-color: var(--steel-text) !important;
+  --toolbar-color: var(--steel-text) !important;
+  --toolbar-field-color: var(--steel-text) !important;
+  --sidebar-text-color: var(--steel-text) !important;
+  --lwt-accent-color-inactive: var(--steel-background) !important;
+  --tab-selected-bgcolor: var(--steel-high) !important;
+  --tab-selected-textcolor: var(--steel-text) !important;
+}

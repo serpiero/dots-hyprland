@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "name": "Metal Red",
+  "palette": {
+    "mode": "fixed",
+    "colors": {
+      "background": "#151211",
+      "low": "#1d1918",
+      "surface": "{background}",
+      "high": "#312826",
+      "highest": "#403331",
+      "text": "#e7e5e4",
+      "muted": "#aa9f9c",
+      "accent": "#dd8673",
+      "selection": "#5a403a",
+      "wine": "#bd9299",
+      "sage": "#9aafa4",
+      "warm": "#b9ae98",
+      "elevated": "#211d1c",
+      "accent_pressed": "#d56952",
+      "terminal_text": "{text}",
+      "terminal_accent": "{accent}"
+    }
+  },
+  "terminal": {
+    "foreground": "{text}",
+    "accent": "{accent}",
+    "ansi_overrides": {}
+  },
+  "layout": {
+    "search": {
+      "maxWidth": 1440,
+      "sideMargin": 60,
+      "wideFrom": 1000
+    },
+    "phone": {
+      "maxDeviceWidth": 1100,
+      "minDppx": 1.5,
+      "contentZoom": 1.35,
+      "chromeZoom": 1.25,
+      "spotifyMaxWidth": 650
+    },
+    "whatsapp": {
+      "width": 320,
+      "minWidth": 240,
+      "maxWidth": 560,
+      "chatMinWidth": 320,
+      "compactWidth": 76,
+      "autoCompactAt": 760
+    }
+  },
+  "prompt": {
+    "label": "METAL RED"
+  },
+  "seed": "#9e3b26",
+  "description": "Custom color"
+}
