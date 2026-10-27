@@ -723,6 +723,12 @@ def install_command_wrappers():
         if target.exists() and (target.is_symlink() or target.read_bytes()[:2]!=b'#!'):continue
         text='#!/bin/sh\nexec /usr/bin/python3 '+shlex.quote(str(ROOT/'app-style.py'))+' launch -- '+shlex.quote(native)+' "$@"\n'
         if not target.exists() or target.read_text()!=text:write(target,text);target.chmod(0o755)
+        if name=='btop':
+            legacy=Path.home()/'.local/bin/btop'
+            # Migrate only our old palette wrapper, preserving user-created scripts.
+            if legacy.is_file() and not legacy.is_symlink() and any(marker in legacy.read_text() for marker in ('obsidian-terminal-colors:', '# Use the active desktop adapter without changing the terminal palette.')):
+                wrapper='#!/bin/sh\n# Use the active desktop adapter without changing the terminal palette.\nrice_root="$HOME/.local/share/rice-profiles"\nif [ -r "$rice_root/app-style.py" ]; then\n    exec /usr/bin/python3 "$rice_root/app-style.py" launch -- /usr/bin/btop "$@"\nfi\nexec /usr/bin/btop "$@"\n'
+                if legacy.read_text()!=wrapper:write(legacy,wrapper);legacy.chmod(0o755)
 
 
 def install_launchers():
@@ -831,8 +837,12 @@ if __name__=='__main__':
             if name=='code': args[1:1]=['--user-data-dir',str(CONFIG/'Code')]
             elif name=='kitty' and not any(x in ('-c','--config') or x.startswith('--config=') for x in args[1:]):
                 args[1:1]=['--config',str(ROOT/'arc-steel/kitty.conf')]
-            elif name=='btop' and not any(x=='--config' or x.startswith('--config=') for x in args[1:]):
-                args[1:1]=['--config',str(ROOT/'arc-steel/btop/btop.conf'),'--themes-dir',str(ROOT/'arc-steel/btop/themes')]
+            elif name=='btop':
+                explicit_config=any(x in ('-c','--config') or x.startswith(('--config=','-c=')) for x in args[1:])
+                if not explicit_config:
+                    args[1:1]=['--config',str(ROOT/'arc-steel/btop/btop.conf')]
+                    if not any(x=='--themes-dir' or x.startswith('--themes-dir=') for x in args[1:]):
+                        args[1:1]=['--themes-dir',str(ROOT/'arc-steel/btop/themes')]
             elif name=='konsole': args[1:1]=['-p','ColorScheme=arc-steel']
             elif name.lower().startswith('qbittorrent'):
                 library=qbit_palette_library()
@@ -865,7 +875,8 @@ if __name__=='__main__':
                 module.apply(prefix=prefix)
             electron_menu_arguments(args)
             native_environment(args[0],e)
-            if name in ('btop','cava','gping','genact','hollywood') and sys.stdout.isatty():
+            # btop uses its native theme; OSC changes would leak into the parent terminal.
+            if name in ('cava','gping','genact','hollywood') and sys.stdout.isatty():
                 sys.stdout.write((ROOT/'arc-steel/generated/terminal-sequences.txt').read_text());sys.stdout.flush()
             if name in ('kitty','alacritty','konsole'):e['STARSHIP_CONFIG']=str(ROOT/'arc-steel/starship.toml')
         os.execvpe(args[0],args,e)
