@@ -10,7 +10,7 @@ Singleton {
     property alias agent: polkitAgent
     property alias active: polkitAgent.isActive
     property alias flow: polkitAgent.flow
-    property bool interactionAvailable: false
+    readonly property bool interactionAvailable: root.flow?.isResponseRequired ?? false
     property string cleanMessage: {
         if (!root.flow) return "";
         return root.flow.message.endsWith(".")
@@ -25,25 +25,15 @@ Singleton {
     }
 
     function cancel() {
-        root.flow.cancelAuthenticationRequest()
+        if (root.flow) root.flow.cancelAuthenticationRequest();
     }
 
-    function submit(string) {
-        root.flow.submit(string)
-        root.interactionAvailable = false
-    }
-
-    Connections {
-        target: root.flow
-        function onAuthenticationFailed() {
-            root.interactionAvailable = true;
-        }
+    function submit(value) {
+        if (!root.interactionAvailable) return;
+        root.flow.submit(value);
     }
 
     PolkitAgent {
         id: polkitAgent
-        onAuthenticationRequestStarted: {
-            root.interactionAvailable = true;
-        }
     }
 }
