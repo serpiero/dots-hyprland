@@ -68,8 +68,10 @@ def validate(root=ROOT):
           '--mat-sidenav-container-background-color: var(--steel-background)' in web and
           '--drawer-background: var(--steel-background)' in web and
           '--dropdown-background: var(--steel-high)' in web)
-    btop=(root/'arc-steel/btop/themes/arc-steel.theme').read_text()
-    check('btop terminal colors',f'theme[main_bg]="{p["background"]}"' in btop and
+    btop=(root/'arc-steel/btop/btop.conf').read_text()
+    check('btop terminal colors',
+          re.search(r'^color_theme\s*=\s*"Default"\s*$',btop,re.M) is not None and
+          re.search(r'^theme_background\s*=\s*false\s*$',btop,re.M) is not None and
           (style/'config/btop').resolve()==(root/'arc-steel/btop').resolve() and
           ('\033]11;'+p['background']+'\007') in (root/'arc-steel/generated/terminal-sequences.txt').read_text())
     cava=configparser.ConfigParser(interpolation=None);cava.read(style/'config/cava/config')

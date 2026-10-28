@@ -106,18 +106,7 @@ format = "$symbol "
     prompt_colors = dict(p, text=terminal_text, accent=terminal_accent)
     prompt += ''.join(f'{k} = "{prompt_colors[k]}"\n' for k in ('text','accent','muted','wine','sage'))
     write(ROOT/'arc-steel/starship.toml',prompt)
-    btop = ROOT/'arc-steel/btop/themes/arc-steel.theme'
-    contents=btop.read_text()
-    def monitor(match):
-        key=match[1]
-        if key in ('main_bg','graph_bg'): value=p['background']
-        elif key in ('main_fg','title','selected_fg'): value=p['text']
-        elif key in ('selected_bg','meter_bg','inactive_fg','div_line'): value=p['selection']
-        elif key.startswith('temp_') or key == 'used_end': value=p['wine'] if key.endswith('end') else p['warm']
-        elif key.startswith(('free_','available_')): value=p['sage']
-        else: value=p['accent']
-        return f'theme[{key}]="{value}"'
-    write(btop,re.sub(r'theme\[([^]]+)\]="#[0-9a-fA-F]+"',monitor,contents))
+    # btop Default keeps its own colors and inherits the terminal background.
     sequences='\033]10;'+terminal_text+'\007\033]11;'+p['background']+'\007\033]12;'+terminal_accent+'\007'
     sequences+=''.join('\033]4;'+str(index)+';'+value+'\007' for index,value in enumerate(ansi))
     write(ROOT/'arc-steel/generated/terminal-sequences.txt',sequences)

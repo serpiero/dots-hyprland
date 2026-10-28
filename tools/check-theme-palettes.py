@@ -14,7 +14,7 @@ with tempfile.TemporaryDirectory(prefix='rice-palette-check-') as temporary:
                      'ui/modules/common/widgets/StyledContextMenu.qml',
                      'ui/modules/common/widgets/StyledContextMenuItem.qml',
                      'ui/modules/ii/sidebarLeft/WebChat.qml','arc-steel/kitty.conf',
-                     'arc-steel/btop/themes/arc-steel.theme','arc-steel/app-settings/kdeglobals',
+                     'arc-steel/btop/btop.conf','arc-steel/app-settings/kdeglobals',
                      'arc-steel/application-style/webkit-style.c','arc-steel/application-style/clients/retroarch/build.json'):
         source=ROOT/relative
         if source.exists():
