@@ -3,6 +3,90 @@ from pathlib import Path
 import subprocess as sp,os,json,time,signal,sys,fcntl
 ROOT=Path(__file__).resolve().parent
 
+
+def watch_ui():
+    """Recover only this profile's shell while its original Hyprland session exists."""
+    import threading
+    signature=os.environ.get('HYPRLAND_INSTANCE_SIGNATURE', '')
+    runtime=os.environ.get('XDG_RUNTIME_DIR', '')
+    if not signature or not runtime:
+        raise RuntimeError('Shell recovery requires an existing Hyprland session')
+    socket=Path(runtime)/'hypr'/signature/'.socket.sock'
+    profile=(ROOT/'active').read_text().strip()
+    if profile=='ii':
+        return
+    binary=ROOT/'web-runtime/bin/qs'
+    command=[str(binary),'-c',profile]
+    stop_event=threading.Event()
+    for sig in (signal.SIGTERM,signal.SIGINT):
+        signal.signal(sig,lambda *_:stop_event.set())
+    def owned(pid):
+        try:
+            parts=Path(f'/proc/{pid}/cmdline').read_bytes().split(b'\0')
+            return str(binary).encode() in parts and parts[-3:-1]==[b'-c',profile.encode()]
+        except (FileNotFoundError,ProcessLookupError):
+            return False
+    with (ROOT/'.shell-watch-lock').open('a') as instance_lock:
+        try:
+            fcntl.flock(instance_lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError:
+            return
+        failures=0
+        delay=2
+        healthy_since=time.monotonic()
+        child=None
+        while not stop_event.wait(delay):
+            if not socket.exists() or (ROOT/'active').read_text().strip()!=profile:
+                return
+            with (ROOT/'.session-lock').open('a') as lock:
+                fcntl.flock(lock,fcntl.LOCK_EX)
+                if stop_event.is_set() or not socket.exists() or (ROOT/'active').read_text().strip()!=profile:
+                    return
+                if child is not None:
+                    child.poll()
+                try:
+                    pid=int((ROOT/'ui.pid').read_text())
+                except (FileNotFoundError,ValueError):
+                    pid=0
+                alive=pid>0 and owned(pid)
+                if alive:
+                    try:
+                        result=sp.run(command+['ipc','call','riceShell','status'],capture_output=True,timeout=5)
+                        healthy=result.returncode==0
+                    except sp.TimeoutExpired:
+                        healthy=False
+                    failures=0 if healthy else failures+1
+                    if healthy:
+                        if time.monotonic()-healthy_since>60:
+                            delay=2
+                        continue
+                    if failures<3:
+                        continue
+                    # Recheck ownership immediately before signalling; never kill by name.
+                    if owned(pid):
+                        os.kill(pid,signal.SIGTERM)
+                        for _ in range(20):
+                            if not owned(pid) or stop_event.wait(.1):
+                                break
+                        if stop_event.is_set():
+                            return
+                        if owned(pid):
+                            os.kill(pid,signal.SIGKILL)
+                print('Shell recovery: restarting the active profile after exit or IPC failure',flush=True)
+                with (ROOT/'ui.log').open('a') as log:
+                    child=sp.Popen(command,stdout=log,stderr=log,start_new_session=True)
+                record=ROOT/'ui.pid'
+                temporary=record.with_suffix('.pid.tmp')
+                temporary.write_text(str(child.pid))
+                os.replace(temporary,record)
+                failures=0
+                healthy_since=time.monotonic()
+                delay=min(delay*2,60)
+
+if __name__=='__main__' and len(sys.argv)>1 and sys.argv[1]=='watch-ui':
+    watch_ui()
+    sys.exit(0)
+
 def env():
     e=dict(os.environ)
     if not e.get('HYPRLAND_INSTANCE_SIGNATURE'):
@@ -75,6 +159,7 @@ def sync():
         start('wallpaper',[str(ROOT/'bin/swaybg'),'-i',wall,'-m','fill'])
         start('application-launchers',[sys.executable,str(ROOT/'desktop-watch.py')])
         start('ui',[str(ROOT/'web-runtime/bin/qs'),'-c','arc-steel'])
+        start('shell-watch',[sys.executable,str(ROOT/'session.py'),'watch-ui'])
         call(['python3',str(ROOT/'tools/update-tray.py')],check=True,timeout=15)
 
 def menu(items,prompt):
