@@ -765,6 +765,9 @@ def install_launchers():
                 lines.append(line)
             updated='\n'.join(lines)+'\n'
             if updated==text:continue
+            # Nested Wine entries keep their original source; do not rewrite an
+            # identical flattened destination and retrigger desktop watchers.
+            if dst.is_file() and dst.read_text()==updated:continue
             write(dst,updated);count+=1
     update_aerion_autostart()
     install_command_wrappers()
